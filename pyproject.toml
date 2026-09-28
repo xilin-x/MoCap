@@ -1,0 +1,127 @@
+[project]
+name = "mocap"
+version = "0.1.0"
+description = "MoCap environment"
+requires-python = "==3.12.*"
+
+dependencies = [
+    # PyTorch + CUDA 12.8
+    "torch==2.10.0",
+    "torchvision==0.25.0",
+    "torchaudio==2.10.0",
+
+    # Core
+    "numpy==1.26.4",
+    "opencv-python==4.11.0.86",
+    "iopath==0.1.10",
+    "networkx==3.2.1",
+    "setuptools==80.9.0",
+
+    "pytorch-lightning",
+    "pyrender",
+    "yacs",
+    "scikit-image",
+    "scikit-learn",
+    "einops",
+    "timm>=1.0.17",
+    "dill",
+    "pandas",
+    "rich",
+    "roma",
+    "joblib",
+    "seaborn",
+    "wandb",
+
+    "hydra-core",
+    "hydra-submitit-launcher",
+    "hydra-colorlog",
+    "pyrootutils",
+
+    "webdataset",
+    "chump",
+    "appdirs",
+    "ffmpeg",
+    "cython",
+    "jsonlines",
+    "loguru",
+    "optree",
+
+    "fvcore",
+    "pycocotools",
+    "xtcocotools",
+
+    "tensorboard",
+    "huggingface-hub",
+
+    "tqdm",
+    "ftfy==6.1.1",
+    "regex",
+    "typing-extensions",
+
+    "click",
+    "scipy",
+    "matplotlib",
+    "trimesh",
+    "pillow",
+    "gradio",
+
+    "decord==0.6.0",
+    "psutil",
+
+    "pytest",
+    "black",
+    "yapf>=0.43.0",
+
+    # Local repositories
+    "detectron2",
+    "moge",
+    "sam3",
+    "pymomentum-core",
+]
+
+
+[tool.uv]
+
+package = false
+
+# Linux-only GPU environment
+environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'"
+]
+
+override-dependencies = [
+    "iopath==0.1.10",
+]
+
+
+[tool.uv.sources]
+
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+
+detectron2 = { path = "lib/detectron2", editable = true }
+moge = { path = "lib/moge", editable = true }
+sam3 = { path = "lib/sam3", editable = true }
+
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+
+[tool.uv.extra-build-dependencies]
+
+# Detectron2 imports torch while compiling its C++/CUDA extension
+detectron2 = [
+    "torch==2.10.0",
+    "numpy==1.26.4",
+    "ninja",
+]
+
+# xtcocotools imports numpy during its source build
+xtcocotools = [
+    "numpy==1.26.4",
+    "cython",
+]
