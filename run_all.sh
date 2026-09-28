@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-DATA=/hdd/xilin/Datasets/mocap_data
+DATA="${MOCAP_DATA:?Set MOCAP_DATA to your dataset directory}"
 GPU=0
 FPS=30
 TEMPLATE="$DATA/templates/TPose.fbx"

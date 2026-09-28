@@ -112,12 +112,18 @@ Most stages support `--resume`, allowing interrupted jobs to continue from exist
 
 ### 4.3 Step-by-step
 
+Set the dataset root before running the commands below:
+
+```bash
+export DATA=/path/to/mocap_data
+```
+
 #### 1. Extract frames
 
 ```bash
 uv run python extract_frames.py \
-    -i /hdd/xilin/Datasets/mocap_data/videos \
-    -o /hdd/xilin/Datasets/mocap_data/results/frames \
+    -i $DATA/videos \
+    -o $DATA/results/frames \
     -w 8 \
     --resume
 ```
@@ -126,8 +132,8 @@ uv run python extract_frames.py \
 
 ```bash
 uv run python extract_bbox.py \
-    -i /hdd/xilin/Datasets/mocap_data/results/frames \
-    -o /hdd/xilin/Datasets/mocap_data/results/bboxes \
+    -i $DATA/results/frames \
+    -o $DATA/results/bboxes \
     -v all \
     --resume
 ```
@@ -138,8 +144,8 @@ Check for missing results:
 
 ```bash
 uv run python check_bboxes.py \
-    -i /hdd/xilin/Datasets/mocap_data/results/frames \
-    -b /hdd/xilin/Datasets/mocap_data/results/bboxes \
+    -i $DATA/results/frames \
+    -b $DATA/results/bboxes \
     -v all
 ```
 
@@ -149,9 +155,9 @@ The default mode uses a bounding box prompt:
 
 ```bash
 uv run python extract_masks.py \
-    -i /hdd/xilin/Datasets/mocap_data/results/frames \
-    -b /hdd/xilin/Datasets/mocap_data/results/bboxes \
-    -o /hdd/xilin/Datasets/mocap_data/results/masks \
+    -i $DATA/results/frames \
+    -b $DATA/results/bboxes \
+    -o $DATA/results/masks \
     -v all \
     --resume
 ```
@@ -160,8 +166,8 @@ You can also use the text prompt `person` directly:
 
 ```bash
 uv run python extract_masks_text.py \
-    -i /hdd/xilin/Datasets/mocap_data/results/frames \
-    -o /hdd/xilin/Datasets/mocap_data/results/masks \
+    -i $DATA/results/frames \
+    -o $DATA/results/masks \
     -v all
 ```
 
@@ -169,9 +175,9 @@ uv run python extract_masks_text.py \
 
 ```bash
 uv run python extract_meshes.py \
-    -i /hdd/xilin/Datasets/mocap_data/results/frames \
-    -m /hdd/xilin/Datasets/mocap_data/results/masks \
-    -o /hdd/xilin/Datasets/mocap_data/results/meshes \
+    -i $DATA/results/frames \
+    -m $DATA/results/masks \
+    -o $DATA/results/meshes \
     -v all \
     --resume
 ```
@@ -189,9 +195,9 @@ meshes/<sequence>/<video>/
 
 ```bash
 uv run python visualize_meshes.py \
-    -i /hdd/xilin/Datasets/mocap_data/results/frames \
-    -m /hdd/xilin/Datasets/mocap_data/results/meshes \
-    -o /hdd/xilin/Datasets/mocap_data/results/mesh_visualizations \
+    -i $DATA/results/frames \
+    -m $DATA/results/meshes \
+    -o $DATA/results/mesh_visualizations \
     -v all \
     --resume
 ```
@@ -202,7 +208,7 @@ Use `--face-step` to reduce triangle sampling density. `--elev` and `--azim` con
 
 ```bash
 uv run python build_motion.py \
-    -i "/hdd/xilin/Datasets/mocap_data/results/meshes/Arm Circles/Arm Circles (A)/mhr_params" \
+    -i "$DATA/results/meshes/Arm Circles/Arm Circles (A)/mhr_params" \
     --fps 30
 ```
 
@@ -225,9 +231,9 @@ Use a Monty FBX as the template and run Blender in background mode:
 ```bash
 blender -b --python export_fbx_blender.py -- \
     --template "/path/to/TPose.fbx" \
-    --motion "/hdd/xilin/Datasets/mocap_data/results/meshes/Arm Circles/Arm Circles (A)/motion.npz" \
-    --skeleton "/hdd/xilin/Datasets/mocap_data/results/meshes/Arm Circles/Arm Circles (A)/skeleton.npz" \
-    --output "/hdd/xilin/Datasets/mocap_data/results/meshes/Arm Circles/Arm Circles (A)/Arm_Circles.fbx"
+    --motion "$DATA/results/meshes/Arm Circles/Arm Circles (A)/motion.npz" \
+    --skeleton "$DATA/results/meshes/Arm Circles/Arm Circles (A)/skeleton.npz" \
+    --output "$DATA/results/meshes/Arm Circles/Arm Circles (A)/Arm_Circles.fbx"
 ```
 
 The exported rig, mesh, skin, and bone hierarchy come from the template. The `Monty_` prefix is removed from bone names; for example, `Monty_Hips` becomes `Hips`.
@@ -238,8 +244,8 @@ Create a video from mesh visualization images:
 
 ```bash
 uv run python images_to_video.py \
-    -i /hdd/xilin/Datasets/mocap_data/results/mesh_visualizations \
-    -o /hdd/xilin/Datasets/mocap_data/results/mesh_videos \
+    -i $DATA/results/mesh_visualizations \
+    -o $DATA/results/mesh_videos \
     --fps 30 \
     --resume
 ```
